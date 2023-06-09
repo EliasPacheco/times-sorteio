@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gerador de Opções de Jogos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+        }
+        
+        form {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            font-weight: bold;
+        }
+        
+        input[type="text"], input[type="submit"] {
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 10px;
+        }
+        
+        .options {
+            background-color: #f9f9f9;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gerador de Opções de Jogos</h1>
+    
+    <form id="jogosFixosForm">
+        <label>Digite o nome do jogo fixo:</label><br>
+        <input type="text" id="jogoFixoInput">
+        <input type="submit" value="Adicionar Jogo Fixo">
+    </form>
+    
+    <form id="opcoesForm">
+        <h2>Opções Adicionais:</h2>
+        
+        <div>
+            <label>Digite o nome do time 1:</label><br>
+            <input type="text" id="time1Input" required>
+        </div>
+        
+        <div>
+            <label>Digite o nome do time 2:</label><br>
+            <input type="text" id="time2Input" required>
+        </div>
+        
+        <div>
+            <label>Ambos marcam?</label><br>
+            <input type="checkbox" id="ambosMarcam" name="opcao" value="ambosMarcam">
+            <label for="ambosMarcam">Ambos marcam</label>
+        </div>
+        
+        <div>
+            <label>Qual time está ganhando?</label><br>
+            <input type="checkbox" id="timeGanhando1" name="opcao" value="timeGanhando1">
+            <label for="timeGanhando1">Time 1</label>
+            <input type="checkbox" id="timeGanhando2" name="opcao" value="timeGanhando2">
+            <label for="timeGanhando2">Time 2</label>
+        </div>
+        
+        <div>
+            <label>Qual time está perdendo?</label><br>
+            <input type="checkbox" id="timePerdendo1" name="opcao" value="timePerdendo1">
+            <label for="timePerdendo1">Time 1</label>
+            <input type="checkbox" id="timePerdendo2" name="opcao" value="timePerdendo2">
+            <label for="timePerdendo2">Time 2</label>
+        </div>
+        
+        <input type="submit" value="Adicionar Opção">
+    </form>
+    
+    <div class="options" id="opcoesContainer">
+        <h2>Opções Selecionadas:</h2>
+        <ul id="opcoesList"></ul>
+    </div>
+    
+    <script>
+        document.getElementById("jogosFixosForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            
+            var jogoFixoInput = document.getElementById("jogoFixoInput");
+            var jogoFixo = jogoFixoInput.value.trim();
+            
+            if (jogoFixo !== "") {
+                var opcoesList = document.getElementById("opcoesList");
+                var listItem = document.createElement("li");
+                listItem.innerText = jogoFixo;
+                opcoesList.appendChild(listItem);
+                
+                jogoFixoInput.value = "";
+            }
+        });
+        
+        document.getElementById("opcoesForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            
+            var time1Input = document.getElementById("time1Input");
+            var time2Input = document.getElementById("time2Input");
+            
+            var checkboxes = document.querySelectorAll('input[name="opcao"]:checked');
+            var opcoes = [];
+            
+            if (time1Input.value.trim() === "" || time2Input.value.trim() === "" || checkboxes.length === 0) {
+                alert("Preencha todos os campos obrigatórios.");
+                return;
+            }
+            
+            checkboxes.forEach(function(checkbox) {
+                opcoes.push(checkbox.value);
+            });
+            
+            var time1 = time1Input.value.trim();
+            var time2 = time2Input.value.trim();
+            var opcoesList = document.getElementById("opcoesList");
+            
+            opcoes.forEach(function(opcao) {
+                var listItem = document.createElement("li");
+                
+                if (opcao === "ambosMarcam") {
+                    listItem.innerText = "Ambos marcam: " + time1 + " vs " + time2;
+                } else if (opcao === "timeGanhando1") {
+                    listItem.innerText = "Time ganhando: " + time1;
+                } else if (opcao === "timeGanhando2") {
+                    listItem.innerText = "Time ganhando: " + time2;
+                } else if (opcao === "timePerdendo1") {
+                    listItem.innerText = "Time perdendo: " + time1;
+                } else if (opcao === "timePerdendo2") {
+                    listItem.innerText = "Time perdendo: " + time2;
+                }
+                
+                opcoesList.appendChild(listItem);
+            });
+            
+            time1Input.value = "";
+            time2Input.value = "";
+            checkboxes.forEach(function(checkbox) {
+                checkbox.checked = false;
+            });
+        });
+    </script>
+</body>
+</html>
